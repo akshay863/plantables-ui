@@ -13,7 +13,7 @@ function App() {
   const [authError, setAuthError] = useState('');
   
   // CHANGE YOUR PASSWORD HERE
-  const SECRET_PASSWORD = "admin"; 
+  const SECRET_PASSWORD = "plantables_hub_123"; 
 
   // --- APP STATE ---
   const { fetchProducts, isLoading } = useProductStore();
