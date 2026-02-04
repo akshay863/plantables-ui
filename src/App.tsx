@@ -1,73 +1,62 @@
-import React, { useEffect, useState } from 'react';
-import { DashboardLayout } from './layouts/DashboardLayout';
-import { ProductDetail } from './components/ProductDetail';
-import { ProductForm } from './components/ProductForm';
-import { useProductStore } from './store/useProductStore';
-import { Sidebar } from './components/Sidebar';
-import { Menu } from 'lucide-react';
+import { useState } from 'react';
+// Keep your existing imports (e.g., layouts, store, etc.)
+import DashboardLayout from './layouts/DashboardLayout'; // Example based on your file tree
 
 function App() {
-  const { fetchProducts, isLoading } = useProductStore();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [formState, setFormState] = useState<{ isOpen: boolean; editMode: boolean }>({
-    isOpen: false,
-    editMode: false
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+  // SET YOUR PASSWORD HERE
+  const SECRET_PASSWORD = "mysecretpassword"; 
 
-  if (isLoading) {
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === SECRET_PASSWORD) {
+      setIsAuthenticated(true);
+      setError('');
+    } else {
+      setError('Incorrect password');
+    }
+  };
+
+  // If not authenticated, show the lock screen
+  if (!isAuthenticated) {
     return (
-      <div className="flex h-screen items-center justify-center bg-paper text-primary">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
-          <p className="font-medium animate-pulse">Loading Plantables Hub...</p>
+      <div className="flex min-h-screen items-center justify-center bg-gray-100">
+        <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
+          <h2 className="text-2xl font-bold text-center text-gray-900">Protected Page</h2>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Password</label>
+              <input
+                type="password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Enter password"
+              />
+            </div>
+            {error && <p className="text-sm text-red-600">{error}</p>}
+            <button
+              type="submit"
+              className="w-full px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700"
+            >
+              Access Dashboard
+            </button>
+          </form>
         </div>
       </div>
     );
   }
 
+  // If authenticated, render your actual App content
   return (
-    <div className="flex h-screen bg-paper overflow-hidden font-sans text-gray-900">
-      {/* Mobile Overlay */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <Sidebar 
-        onNewProduct={() => setFormState({ isOpen: true, editMode: false })} 
-        isOpen={isSidebarOpen} 
-        onClose={() => setIsSidebarOpen(false)}
-      />
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 relative">
-        {/* Mobile Header */}
-        <div className="lg:hidden bg-primary text-white p-4 flex items-center justify-between shadow-md z-30">
-          <div className="flex items-center gap-3">
-            <button onClick={() => setIsSidebarOpen(true)} className="p-1 hover:bg-white/10 rounded">
-              <Menu className="w-6 h-6" />
-            </button>
-            <span className="font-bold tracking-wide">PLANTABLES</span>
-          </div>
-        </div>
-
-        <ProductDetail onEdit={() => setFormState({ isOpen: true, editMode: true })} />
-      </div>
-
-      {/* Product Form Modal */}
-      <ProductForm 
-        isOpen={formState.isOpen} 
-        editMode={formState.editMode}
-        onClose={() => setFormState({ ...formState, isOpen: false })} 
-      />
-    </div>
+    // Your existing JSX goes here. 
+    // Based on your file tree, it might look like this:
+    <DashboardLayout>
+       {/* Your main dashboard content/routes */}
+    </DashboardLayout>
   );
 }
 
