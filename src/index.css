@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Mobile devices */
+@media (max-width: 768px) {
+
+  h1 {
+    font-size: 22px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  .layout {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+
+}
